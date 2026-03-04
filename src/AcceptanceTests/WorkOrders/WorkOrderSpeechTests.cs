@@ -74,7 +74,8 @@ public class WorkOrderSpeechTests : AcceptanceTestBase
         order = await CompleteExistingWorkOrder(order);
         order = await ClickWorkOrderNumberFromSearchPage(order);
 
-        await Expect(Page.GetByTestId(nameof(WorkOrderManage.Elements.ReadOnlyMessage))).ToBeVisibleAsync();
+        // Creator can Reassign a completed work order, so ReadOnlyMessage is not shown
+        // but speech buttons should still be visible
         await Expect(Page.GetByTestId(nameof(WorkOrderManage.Elements.SpeakTitle))).ToBeVisibleAsync();
         await Expect(Page.GetByTestId(nameof(WorkOrderManage.Elements.SpeakDescription))).ToBeVisibleAsync();
     }
