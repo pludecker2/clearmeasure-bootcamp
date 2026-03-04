@@ -360,7 +360,7 @@ jobs:
   docker-build-image-for-churchbulletin-ui:
     name: Publish Release Candidate
     needs: [build-linux]
-    if: false
+    if: ${{ secrets.AZURE_CREDENTIALS != '' }}
     runs-on: ubuntu-latest
     concurrency:
       # Stop publishing a release candidate if a newer job arrives.
