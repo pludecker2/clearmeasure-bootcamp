@@ -46,7 +46,7 @@ public class WorkOrderTests
         workOrder.Assignee = assignee;
 
         Assert.That(workOrder.Id, Is.EqualTo(guid));
-        Assert.That(workOrder.Title, Is.EqualTo("Title"));
+        Assert.That(workOrder.Title, Is.EqualTo("TITLE"));
         Assert.That(workOrder.Description, Is.EqualTo("Description"));
         Assert.That(workOrder.Status, Is.EqualTo(WorkOrderStatus.Complete));
         Assert.That(workOrder.Number, Is.EqualTo("Number"));
