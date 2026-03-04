@@ -14,27 +14,18 @@ public class StateCommandHandlerForUnassignTests : IntegratedTestBase
     {
         new DatabaseTests().Clean();
 
+        var workOrder = Faker<WorkOrder>();
+        workOrder.Id = Guid.Empty;
         var creator = Faker<Employee>();
-        creator.Id = Guid.NewGuid();
         var assignee = Faker<Employee>();
-        assignee.Id = Guid.NewGuid();
+        workOrder.Creator = creator;
+        workOrder.Assignee = assignee;
+        workOrder.Status = WorkOrderStatus.Assigned;
 
         await using (var context = TestHost.GetRequiredService<DbContext>())
         {
             context.Add(creator);
             context.Add(assignee);
-            await context.SaveChangesAsync();
-        }
-
-        var workOrder = Faker<WorkOrder>();
-        workOrder.Creator = creator;
-        workOrder.Assignee = assignee;
-        workOrder.AssignedDate = DateTime.Now;
-        workOrder.Status = WorkOrderStatus.Assigned;
-
-        await using (var context = TestHost.GetRequiredService<DbContext>())
-        {
-            context.Add(workOrder);
             await context.SaveChangesAsync();
         }
 
@@ -46,7 +37,7 @@ public class StateCommandHandlerForUnassignTests : IntegratedTestBase
         result.WorkOrder.Assignee.ShouldBeNull();
 
         var context3 = TestHost.GetRequiredService<DbContext>();
-        var order = context3.Find<WorkOrder>(workOrder.Id) ?? throw new InvalidOperationException();
+        var order = context3.Find<WorkOrder>(result.WorkOrder.Id) ?? throw new InvalidOperationException();
         order.Status.ShouldBe(WorkOrderStatus.Draft);
         order.Assignee.ShouldBeNull();
         order.AssignedDate.ShouldBeNull();
@@ -60,30 +51,20 @@ public class StateCommandHandlerForUnassignTests : IntegratedTestBase
     {
         new DatabaseTests().Clean();
 
+        var workOrder = Faker<WorkOrder>();
+        workOrder.Id = Guid.Empty;
         var creator = Faker<Employee>();
-        creator.Id = Guid.NewGuid();
         var assignee = Faker<Employee>();
-        assignee.Id = Guid.NewGuid();
         var newAssignee = Faker<Employee>();
-        newAssignee.Id = Guid.NewGuid();
+        workOrder.Creator = creator;
+        workOrder.Assignee = assignee;
+        workOrder.Status = WorkOrderStatus.Assigned;
 
         await using (var context = TestHost.GetRequiredService<DbContext>())
         {
             context.Add(creator);
             context.Add(assignee);
             context.Add(newAssignee);
-            await context.SaveChangesAsync();
-        }
-
-        var workOrder = Faker<WorkOrder>();
-        workOrder.Creator = creator;
-        workOrder.Assignee = assignee;
-        workOrder.AssignedDate = DateTime.Now;
-        workOrder.Status = WorkOrderStatus.Assigned;
-
-        await using (var context = TestHost.GetRequiredService<DbContext>())
-        {
-            context.Add(workOrder);
             await context.SaveChangesAsync();
         }
 
@@ -96,9 +77,11 @@ public class StateCommandHandlerForUnassignTests : IntegratedTestBase
         result.WorkOrder.Assignee.ShouldBeNull();
 
         // Reassign
-        workOrder.Assignee = newAssignee;
-        var assignCommand = RemotableRequestTests.SimulateRemoteObject(new DraftToAssignedCommand(workOrder, creator));
-        var result2 = await handler.Handle(assignCommand);
+        var unassignedOrder = result.WorkOrder;
+        unassignedOrder.Assignee = newAssignee;
+        var assignCommand = RemotableRequestTests.SimulateRemoteObject(new DraftToAssignedCommand(unassignedOrder, creator));
+        var handler2 = TestHost.GetRequiredService<StateCommandHandler>();
+        var result2 = await handler2.Handle(assignCommand);
 
         result2.WorkOrder.Status.ShouldBe(WorkOrderStatus.Assigned);
         result2.WorkOrder.Assignee.ShouldBe(newAssignee);
