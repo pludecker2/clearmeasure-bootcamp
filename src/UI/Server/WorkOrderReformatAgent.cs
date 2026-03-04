@@ -21,7 +21,7 @@ public class WorkOrderReformatAgent(
         try
         {
             var chatClient = await chatClientFactory.GetChatClient();
-            var language = workOrder.Assignee.PreferredLanguage;
+            var language = workOrder.Assignee?.PreferredLanguage;
 
             var systemPrompt = """
                                You are an AI agent responsible for reformatting work order fields.
