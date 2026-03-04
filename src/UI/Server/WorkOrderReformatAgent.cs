@@ -21,13 +21,14 @@ public class WorkOrderReformatAgent(
         try
         {
             var chatClient = await chatClientFactory.GetChatClient();
+            var language = workOrder.Assignee.PreferredLanguage;
 
             var systemPrompt = """
                                You are an AI agent responsible for reformatting work order fields.
                                You will receive a work order title and description.
 
                                Your tasks:
-                               1. Correct the description for grammar and punctuation. Do not change the meaning.
+                               1. Translate the description into the preferred language specified here.
                                2. Ensure the title starts with a capital letter. Do not change anything else about the title.
 
                                If no changes are needed, respond with exactly: NO_CHANGES
@@ -40,6 +41,7 @@ public class WorkOrderReformatAgent(
             var workOrderInfo = $"""
                                  Title: {workOrder.Title}
                                  Description: {workOrder.Description}
+                                 Preferred Language: {language}
                                  """;
 
             var messages = new List<ChatMessage>
