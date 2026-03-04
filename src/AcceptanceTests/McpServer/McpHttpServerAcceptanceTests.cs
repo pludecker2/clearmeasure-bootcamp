@@ -73,7 +73,7 @@ public class McpHttpServerAcceptanceTests : AcceptanceTestBase
                 ["creatorUsername"] = creator.UserName!
             });
 
-        text.ShouldContain("HTTP transport test");
+        text.ShouldContain("HTTP TRANSPORT TEST");
         text.ShouldContain("Draft");
     }
 

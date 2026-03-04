@@ -53,7 +53,7 @@ public class McpWorkOrderLifecycleTests : AcceptanceTestBase
                 ["creatorUsername"] = creator.UserName!
             });
 
-        createResult.ShouldContain("Lifecycle test work order");
+        createResult.ShouldContain("LIFECYCLE TEST WORK ORDER");
         createResult.ShouldContain("Draft");
         var workOrderNumber = McpTestHelper.ExtractJsonValue(createResult, "Number");
         workOrderNumber.ShouldNotBeNullOrEmpty("Work order number should be returned");
@@ -102,7 +102,7 @@ public class McpWorkOrderLifecycleTests : AcceptanceTestBase
             });
 
         getResult.ShouldContain("Complete");
-        getResult.ShouldContain("Lifecycle test work order");
+        getResult.ShouldContain("LIFECYCLE TEST WORK ORDER");
         getResult.ShouldContain(creator.GetFullName());
         getResult.ShouldContain(assignee.GetFullName());
     }

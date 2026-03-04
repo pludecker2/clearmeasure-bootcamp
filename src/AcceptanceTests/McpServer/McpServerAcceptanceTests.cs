@@ -63,7 +63,7 @@ public class McpServerAcceptanceTests : AcceptanceTestBase
                 ["creatorUsername"] = creator.UserName!
             });
 
-        result.ShouldContain("Direct MCP tool test");
+        result.ShouldContain("DIRECT MCP TOOL TEST");
         result.ShouldContain("Draft");
     }
 }
