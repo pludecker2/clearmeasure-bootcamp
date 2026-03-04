@@ -216,6 +216,7 @@ public class ServerFixture
             }
         };
         _serverProcess.StartInfo.Environment["DISABLE_AUTO_CANCEL_AGENT"] = "true";
+        _serverProcess.StartInfo.Environment["DISABLE_AUTO_REFORMAT_AGENT"] = "true";
 
         if (useSqlite)
         {
