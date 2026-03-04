@@ -58,7 +58,7 @@ public class WorkOrderSpeechTests : AcceptanceTestBase
     }
 
     [Test, Retry(2)]
-    public async Task ShouldShowSpeakButtonsOnReadOnlyWorkOrder()
+    public async Task ShouldShowSpeakButtonsOnCompletedWorkOrder()
     {
         await LoginAsCurrentUser();
 
@@ -74,7 +74,9 @@ public class WorkOrderSpeechTests : AcceptanceTestBase
         order = await CompleteExistingWorkOrder(order);
         order = await ClickWorkOrderNumberFromSearchPage(order);
 
-        await Expect(Page.GetByTestId(nameof(WorkOrderManage.Elements.ReadOnlyMessage))).ToBeVisibleAsync();
+        // The assignee sees the Reopen button on a completed work order
+        var reopenButton = Page.GetByTestId(nameof(WorkOrderManage.Elements.CommandButton) + "Reopen");
+        await Expect(reopenButton).ToBeVisibleAsync();
         await Expect(Page.GetByTestId(nameof(WorkOrderManage.Elements.SpeakTitle))).ToBeVisibleAsync();
         await Expect(Page.GetByTestId(nameof(WorkOrderManage.Elements.SpeakDescription))).ToBeVisibleAsync();
     }
