@@ -33,9 +33,11 @@ public class WorkOrderCompleteTests : AcceptanceTestBase
                 Timeout = 10000 // 10 seconds
             });
 
-        // The assignee can Reopen a completed work order, so fields remain enabled
+        // The creator/assignee can Reassign or Reopen a completed work order, so fields remain enabled
+        await Expect(Page.GetByTestId(nameof(WorkOrderManage.Elements.Title))).ToBeEnabledAsync();
         await Expect(Page.GetByTestId(nameof(WorkOrderManage.Elements.Description)))
             .ToHaveValueAsync(expectedDescription);
+        await Expect(Page.GetByTestId(nameof(WorkOrderManage.Elements.Description))).ToBeEnabledAsync();
         await Expect(Page.GetByTestId(nameof(WorkOrderManage.Elements.Status)))
             .ToHaveTextAsync(WorkOrderStatus.Complete.FriendlyName);
 
@@ -72,7 +74,9 @@ public class WorkOrderCompleteTests : AcceptanceTestBase
                              throw new InvalidOperationException();
         rehyratedOrder.Status.ShouldBe(WorkOrderStatus.Complete);
 
-        // The assignee can Reopen a completed work order, so the Reopen button should be visible
+        // Creator can Reassign and assignee can Reopen a completed work order
+        var reassignButton = Page.GetByTestId(nameof(WorkOrderManage.Elements.CommandButton) + CompleteToAssignedCommand.Name);
+        await Expect(reassignButton).ToBeVisibleAsync();
         var reopenButton = Page.GetByTestId(nameof(WorkOrderManage.Elements.CommandButton) + CompleteToInProgressCommand.Name);
         await Expect(reopenButton).ToBeVisibleAsync();
     }

@@ -38,8 +38,8 @@ public class McpWorkOrderToolTests
 
         result.ShouldContain("WO-001");
         result.ShouldContain("WO-002");
-        result.ShouldContain("Fix sink");
-        result.ShouldContain("Paint wall");
+        result.ShouldContain("FIX SINK");
+        result.ShouldContain("PAINT WALL");
     }
 
     [Test]
@@ -81,7 +81,7 @@ public class McpWorkOrderToolTests
         var result = await WorkOrderTools.GetWorkOrder(bus, "WO-100");
 
         result.ShouldContain("WO-100");
-        result.ShouldContain("Test order");
+        result.ShouldContain("TEST ORDER");
         result.ShouldContain("A description");
         result.ShouldContain("101");
     }
@@ -110,7 +110,7 @@ public class McpWorkOrderToolTests
         var numberGenerator = new WorkOrderNumberGenerator();
         var result = await WorkOrderTools.CreateWorkOrder(bus, numberGenerator, "New Work Order", "Fix the broken window", "creator1");
 
-        result.ShouldContain("New Work Order");
+        result.ShouldContain("NEW WORK ORDER");
         result.ShouldContain("Fix the broken window");
         result.ShouldContain("Draft");
     }
